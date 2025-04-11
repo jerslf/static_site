@@ -1,6 +1,6 @@
 from textnode import TextNode, TextType
 from inline_markdown import *
-from markdown_block import *
+from markdown_blocks import *
 
 def main():
     text = '''
@@ -13,7 +13,7 @@ def main():
     - This is another list item
     '''
 
-    blocks = markdown_to_blocks(text)
-    print(blocks)
+    markdown_to_html_node(text)
+    #print(blocks)
 
 main()
