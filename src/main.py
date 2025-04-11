@@ -1,19 +1,31 @@
-from textnode import TextNode, TextType
-from inline_markdown import *
-from markdown_blocks import *
+import os
+import shutil
+
 
 def main():
-    text = '''
-    # This is a heading
+    copy_directory("static", "public")
 
-    This is a paragraph of text. It has some **bold** and _italic_ words inside of it.
 
-    - This is the first list item in a list block
-    - This is a list item
-    - This is another list item
-    '''
+def copy_directory(src, dest):
+    print(f"Copying from: {src} to {dest}")
 
-    markdown_to_html_node(text)
-    #print(blocks)
+    # Delete destination if it exists
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    os.makedirs(dest)
 
-main()
+    # Recurse through files and directories
+    for item in os.listdir(src):
+        src_path = os.path.join(src, item)
+        dest_path = os.path.join(dest, item)
+
+        if os.path.isfile(src_path):
+            shutil.copy(src_path, dest_path)
+            print(f"Copied file: {src_path} -> {dest_path}")
+        elif os.path.isdir(src_path):
+            print(f"Creating directory: {dest_path}")
+            copy_directory(src_path, dest_path)
+
+
+if __name__ == "__main__":
+    main()
