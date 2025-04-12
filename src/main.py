@@ -1,31 +1,29 @@
 import os
 import shutil
 
+from copystatic import copy_files_recursive
+from gencontent import generate_page
+
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
+
 
 def main():
-    copy_directory("static", "public")
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
+
+    print("Copying static files to public directory...")
+    copy_files_recursive(dir_path_static, dir_path_public)
+
+    print("Generating page...")
+    generate_page(
+        os.path.join(dir_path_content, "index.md"),
+        template_path,
+        os.path.join(dir_path_public, "index.html"),
+    )
 
 
-def copy_directory(src, dest):
-    print(f"Copying from: {src} to {dest}")
-
-    # Delete destination if it exists
-    if os.path.exists(dest):
-        shutil.rmtree(dest)
-    os.makedirs(dest)
-
-    # Recurse through files and directories
-    for item in os.listdir(src):
-        src_path = os.path.join(src, item)
-        dest_path = os.path.join(dest, item)
-
-        if os.path.isfile(src_path):
-            shutil.copy(src_path, dest_path)
-            print(f"Copied file: {src_path} -> {dest_path}")
-        elif os.path.isdir(src_path):
-            print(f"Creating directory: {dest_path}")
-            copy_directory(src_path, dest_path)
-
-
-if __name__ == "__main__":
-    main()
+main()
